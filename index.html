@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Coding Resources</title>
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 50px auto; padding: 20px; }
+        h1 { color: #333; }
+        .file-list { list-style: none; padding: 0; }
+        .file-item {
+            background: #f5f5f5;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .file-item a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .file-item small {
+            display: block;
+            color: #666;
+            margin-top: 5px;
+        }
+        .upload-note {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>📁 My Coding Resources</h1>
+    
+    <div class="upload-note">
+        ⬇️ Files below are ready to download. New files appear automatically!
+    </div>
+
+    <ul class="file-list" id="file-list">
+        <!-- Files will appear here automatically -->
+    </ul>
+
+    <script>
+        // This automatically lists all files from your GitHub releases
+        fetch('https://api.github.com/repos/abhi021410-ship-it/REDDY_REPO/releases')
+            .then(response => response.json())
+            .then(releases => {
+                let fileList = document.getElementById('file-list');
+                
+                releases.forEach(release => {
+                    release.assets.forEach(asset => {
+                        let listItem = document.createElement('li');
+                        listItem.className = 'file-item';
+                        listItem.innerHTML = `
+                            <a href="${asset.browser_download_url}" download>📄 ${asset.name}</a>
+                            <small>Uploaded: ${new Date(asset.created_at).toLocaleDateString()}</small>
+                        `;
+                        fileList.appendChild(listItem);
+                    });
+                });
+            })
+            .catch(error => {
+                document.getElementById('file-list').innerHTML = 
+                    '<li>No files uploaded yet. Check back soon!</li>';
+            });
+    </script>
+</body>
+</html>
